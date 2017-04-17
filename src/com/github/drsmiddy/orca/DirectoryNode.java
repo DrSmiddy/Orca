@@ -6,38 +6,43 @@ import java.util.List;
 
 public class DirectoryNode extends File{
 
+	private ArrayList<DirectoryNode> childNodes;
+	
 	public DirectoryNode(String pathname) {
 		super(pathname);
-		children = new ArrayList<>();
+		createChildNodes();
 	}
 
-	private ArrayList<DirectoryNode> children;
-
-	public ArrayList<DirectoryNode> getChildrenNodes() {
-		return children;
+	private void createChildNodes() {
+		childNodes = new ArrayList<>();
+		if (this.isDirectory()){
+			for (File child:this.listFiles()){
+				childNodes.add(new DirectoryNode(child.getPath()));
+			}
+		}
 	}
 	
-	public void setChildren(List<File> newChildren) {
-		for (File child:newChildren){
-			children.add(new DirectoryNode(child.getPath()));
-		}
+	public DirectoryNode[] listNodes(){
+		DirectoryNode[] childNodeArray = new DirectoryNode[childNodes.size()];
+		childNodes.toArray(childNodeArray);
+		return childNodeArray;
 	}
 	
 	public DirectoryNode getChildNodeRecursiv(String name){
 		DirectoryNode childNode = null;
 		int index = 0;
-		int maxIndex = children.size() - 1;
+		int maxIndex = childNodes.size() - 1;
 		
 		do{
-			if(children.get(index).getName().equalsIgnoreCase(name)){
-				childNode = children.get(index);
+			if(childNodes.get(index).getName().equalsIgnoreCase(name)){
+				childNode = childNodes.get(index);
 				break;
 			}
 			else if(index == maxIndex){
 				break;
 			}
 			else {
-				childNode = children.get(index).getChildNodeRecursiv(name);
+				childNode = childNodes.get(index).getChildNodeRecursiv(name);
 				if (childNode != null){
 					break;
 				}
@@ -51,4 +56,12 @@ public class DirectoryNode extends File{
 		
 		return null;
 		}
+	
+	public String getSerializedTagName()
+	{
+		if(this.isDirectory()){
+			return "Dir";
+		}
+		else return "File";
+	}
 }

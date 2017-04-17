@@ -40,9 +40,10 @@ public class DirectorySerializer {
 		
 		Document doc = builder.newDocument();
 		
-		Element element = doc.createElement(rootNode.getName());
+		Element element = doc.createElement("RootDir");
 		doc.appendChild(element);
-		for(DirectoryNode node:rootNode.getChildrenNodes()){
+		element.setAttribute("name", rootNode.getName());
+		for(DirectoryNode node:rootNode.listNodes()){
 			writeElement(doc, element, node);
 		}
 		
@@ -58,10 +59,11 @@ public class DirectorySerializer {
 	
 	public static void writeElement(Document doc, Node parentNode, DirectoryNode node)
 	{
-		Element element = doc.createElement(node.getName().replace(" ", ""));
+		Element element = doc.createElement(node.getSerializedTagName());
 		parentNode.appendChild(element);
+		element.setAttribute("name", node.getName());
 		
-		for(DirectoryNode childNode:node.getChildrenNodes()){
+		for(DirectoryNode childNode:node.listNodes()){
 			writeElement(doc, element, childNode);
 		}
 	}

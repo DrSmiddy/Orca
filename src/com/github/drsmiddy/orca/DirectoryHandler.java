@@ -9,7 +9,7 @@ public class DirectoryHandler implements IDirectoryHandler {
 	
 	@Override
 	public void scanDirectory(String path) {
-		directory = DirectoryScanner.scanDirectory(path);
+		directory = new DirectoryNode(path);
 	}
 
 	@Override
